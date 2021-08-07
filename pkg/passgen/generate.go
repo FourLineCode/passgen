@@ -1,37 +1,49 @@
 package passgen
 
 import (
-	"fmt"
 	"math/rand"
 	"time"
 )
 
 const (
-	DIGITS     = "0123456789"
-	CHAR_LOWER = "abcdefghijklmnopqrstuvwxyz"
-	CHAR_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	SYMBOLS    = "~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/"
+	DIGITS     = "01234567890123456789"
+	CHAR_LOWER = "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
+	CHAR_UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	SYMBOLS    = "~!@#$%&*()_-+={[}]|\\:;<>?/"
 )
 
-func generatePassword() string {
-	characters := getCharString()
-	password := ""
+func generatePassword(args Flags) string {
+	characters := getCharString(args)
+	generatedPassword := ""
 
 	rand.Seed(int64(time.Now().Nanosecond()))
-	for i := 0; i < 12; i++ {
+
+	for i := 0; i < args.length; i++ {
 		index := rand.Intn(len(characters))
-		password = password + string(characters[index])
+		generatedPassword = generatedPassword + string(characters[index])
 	}
 
-	return password
+	return generatedPassword
 }
 
-func getCharString() string {
-	args := getFlags()
+func getCharString(args Flags) string {
+	s := CHAR_LOWER
 
-	fmt.Println(args)
+	if args.digitsOnly {
+		return DIGITS
+	}
 
-	s := DIGITS + CHAR_LOWER + CHAR_UPPER + SYMBOLS
+	if args.uppercase {
+		s += CHAR_UPPER
+	}
+
+	if args.digits {
+		s += DIGITS
+	}
+
+	if args.symbols {
+		s += SYMBOLS
+	}
 
 	return s
 }
