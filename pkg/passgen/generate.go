@@ -1,6 +1,7 @@
 package passgen
 
 import (
+	"fmt"
 	"math/rand"
 	"time"
 )
@@ -12,12 +13,12 @@ const (
 	SYMBOLS    = "~`!@#$%^&*()_-+={[}]|\\:;\"'<,>.?/"
 )
 
-func generatePassword(length int) string {
+func generatePassword() string {
 	characters := getCharString()
 	password := ""
 
 	rand.Seed(int64(time.Now().Nanosecond()))
-	for i := 0; i < length; i++ {
+	for i := 0; i < 12; i++ {
 		index := rand.Intn(len(characters))
 		password = password + string(characters[index])
 	}
@@ -26,6 +27,10 @@ func generatePassword(length int) string {
 }
 
 func getCharString() string {
+	args := getFlags()
+
+	fmt.Println(args)
+
 	s := DIGITS + CHAR_LOWER + CHAR_UPPER + SYMBOLS
 
 	return s
